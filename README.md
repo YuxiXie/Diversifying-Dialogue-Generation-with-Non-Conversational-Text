@@ -2,6 +2,10 @@
 Implementation for the paper Diversifying Dialogue Generation with Non-Conversational Text on English data
 Test
 
+[Collaborating Doc](https://docs.google.com/document/d/1_ybVnAjoKDjbyhQ_PJVUriZkGTe_OH1qjre6JifIJLQ/edit?usp=sharing)
+
+---
+
 ## Datasets
 ### Conversational
 * [DailyDialog](http://yanran.li/dailydialog)
@@ -19,6 +23,12 @@ Test
 |-- .gitignore
 |-- README.md
 |-- LICENSE
+|-- scripts
+    |-- 
+|-- src
+    |-- 
+|-- data
+    |-- data-analysis.md
 ```
 
 ## Experiment Setup

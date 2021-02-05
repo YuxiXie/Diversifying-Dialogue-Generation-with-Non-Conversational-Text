@@ -10,6 +10,12 @@
         * 10 topics in total: 1. `Ordinary Life`, 2. `School Life`, 3. `Culture & Education`, 4. `Attitude & Emotion`, 5. `Relationship`, 6. `Tourism` , 7. `Health`, 8. `Work`, 9. `Politics`, 10. `Finance`
         * daily & natural
 
+* ***EmpatheticDialogue***
+    * **size**: 19,533/2,770/2,547 for train/valid/test
+    * **featrues**
+        * multi-turn
+        * with situation and label for each conversation
+
 ## Non-Conversational
 
 * ***Movie Review***
@@ -26,7 +32,6 @@
         * spoken language
         * some are dialogues focusing on the posts, need to filter out
         * some sentences are in the form of `xx : xxxx...`
-
 
 * ***Twitter for Stanford***
     * too much `#xx` and `@xx`

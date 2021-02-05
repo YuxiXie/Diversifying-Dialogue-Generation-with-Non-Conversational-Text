@@ -24,6 +24,7 @@ Implementation for the paper [Diversifying Dialogue Generation with Non-Conversa
 * [DailyDialog](http://yanran.li/dailydialog)
 * [MultiWoz](https://github.com/budzianowski/multiwoz/tree/master/data/MultiWOZ_2.2)
 * [ConvAI3](http://convai.io/data/)
+* [EmpatheticDialogues](https://github.com/facebookresearch/EmpatheticDialogues)
 
 ### Non-conversational
 * [Quotes500k](https://github.com/ShivaliGoel/Quotes-500K)

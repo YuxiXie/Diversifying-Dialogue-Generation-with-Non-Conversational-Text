@@ -32,6 +32,8 @@ Implementation for the paper [Diversifying Dialogue Generation with Non-Conversa
 * [Twitter](https://github.com/shaypal5/awesome-twitter-data)
 
 ## Experiment Setup
+Run `pip install -r requirements.txt`
+
 TODO
 ### Train
 ### Evaluate

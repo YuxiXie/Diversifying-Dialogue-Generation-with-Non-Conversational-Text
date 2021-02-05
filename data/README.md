@@ -26,12 +26,14 @@
         * neat
         * subjective
 
-* ***Twitter for Cornell***
-    * **size**: 1000/1000 for pos/neg
-    * **features**
-        * spoken language
-        * some are dialogues focusing on the posts, need to filter out
-        * some sentences are in the form of `xx : xxxx...`
-
 * ***Twitter for Stanford***
-    * too much `#xx` and `@xx`
+    * **size**: 1600000
+    * **features**
+        * avg original length: `~66.6` words 
+            * (twitter has 280 character limit)
+        * avg new length (>100 words removed): `~66.6` words
+            * same as before
+        * labels (negative : neutral : positive = 800k:0:800k)
+            * no neutral labels
+        * all @mentions and #hashtags are removed
+    

@@ -1,7 +1,7 @@
 import sys
 from tqdm import tqdm
 import csv
-from data.utils import json_dump, json_load
+from data.utils import json_dump
 
 sentiment_dict = {'0': 'negative', '2': 'neutral', '4': 'positive'}
 

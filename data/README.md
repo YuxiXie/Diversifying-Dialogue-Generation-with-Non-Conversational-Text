@@ -36,4 +36,8 @@
         * labels (negative : neutral : positive = 800k:0:800k)
             * no neutral labels
         * all @mentions and #hashtags are removed
-    
+
+* ***ELI5***
+    * **size**: 72w
+    * **features**
+        * QA dataset: labels contain `declarative` & `question`

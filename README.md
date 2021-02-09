@@ -29,15 +29,24 @@ Adapt from
 ## Code Structure
 ```
 |
-|-- .gitignore
-|-- README.md
-|-- LICENSE
-|-- scripts
-    |-- 
-|-- src
-    |-- 
-|-- data
-    |-- data-analysis.md
+|—— .gitignore
+|—— README.md
+|—— LICENSE
+|—— scripts
+|   |—— run_forward.sh
+|   |—— get_forward_data.sh
+|—— src
+|   |—— forward
+|   |—— backward
+|   |__ topic-classifier
+|__ data
+    |—— README.md
+    |—— utils.py
+    |—— process_dailydialogue.py
+    |—— process_empatheticdialogue.py
+    |—— process_twitter.py
+    |—— process_wikihow.py
+    |__ process_ELI5.py
 ```
 
 ---
@@ -45,18 +54,34 @@ Adapt from
 ## Datasets
 ### Conversational
 * [DailyDialog](http://yanran.li/dailydialog)
-* [MultiWoz](https://github.com/budzianowski/multiwoz/tree/master/data/MultiWOZ_2.2)
-* [ConvAI3](http://convai.io/data/)
+
 * [EmpatheticDialogues](https://github.com/facebookresearch/EmpatheticDialogues)
 
 ### Non-conversational
-* [Quotes500k](https://github.com/ShivaliGoel/Quotes-500K)
-* [Tiny Shakespeare](https://github.com/karpathy/char-rnn/blob/master/data/tinyshakespeare/input.txt)
 * [Twitter](https://github.com/shaypal5/awesome-twitter-data)
 
-## Experiment Setup
-Run `pip install -r requirements.txt`
+* [WikiHow]()
 
-TODO
-### Train
-### Evaluate
+* [ELI5](https://www.aclweb.org/anthology/P19-1346)
+
+## Experiment Setup 
+```
+pip install -r requirements.txt
+```
+
+## Train
+
+### Dialogue Generation
+1. Initilization of forward & backward Seq2Seq models
+    ```
+    bash scripts/get_forward_data.sh
+    bash scripts/run_forward.sh
+
+    bash scripts/get_backward_data.sh
+    bash scripts/run_backward.sh
+    ```
+
+### Topic Classification
+
+
+## Evaluate

@@ -24,8 +24,6 @@ Adapt from
 }
 ```
 
-* [Collaborating Doc](https://docs.google.com/document/d/1_ybVnAjoKDjbyhQ_PJVUriZkGTe_OH1qjre6JifIJLQ/edit?usp=sharing)
-
 ## Code Structure
 ```
 |

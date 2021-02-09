@@ -80,6 +80,7 @@ pip install -r requirements.txt
     bash scripts/get_backward_data.sh
     bash scripts/run_backward.sh
     ```
+    _PS_: After data processing by `get_forward/backward_data.sh`, the processed data is output in `.csv`-file with headers `prefix,input_text,target_text`
 
 ### Topic Classification
 

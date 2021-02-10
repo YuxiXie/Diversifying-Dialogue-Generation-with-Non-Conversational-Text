@@ -1,7 +1,11 @@
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=2
 
-CODEHOME=/home/yuxi/Projects/DiversifyDialogue/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/forward
+EXEHOME=/home/yuxi/Projects/DiversifyDialogue/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/forward
 
-cd ${CODEHOME}
+cd ${EXEHOME}
 
-python train.py
+##=== training ===##
+# python train.py
+
+##=== predicting ===##
+python predict.py

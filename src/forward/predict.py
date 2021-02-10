@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from simpletransformers.seq2seq import Seq2SeqModel, Seq2SeqArgs
 
-from ..utils import load_data, clean_unnecessary_spaces, data_process
+from utils import load_data, clean_unnecessary_spaces, data_process
 
 
 def predict(model_args, test_path, output_path, model_path):
@@ -59,15 +59,15 @@ if __name__ == '__main__':
     # predict
     model_args = Seq2SeqArgs()
     model_args.max_length = 128
-    model_args.eval_batch_size = 64
+    model_args.eval_batch_size = 4
     model_args.do_sample = True
     model_args.top_k = 50
     model_args.top_p = 0.95
     model_args.num_return_sequences = 3
     model_args.num_beams = None
 
-    test_path = ''
-    output_path = ''
-    model_path = ''
+    test_path = '/home/yuxi/Projects/DiversifyDialogue/data/DailyDialogue/processed/test.csv'
+    output_path = '/home/yuxi/Projects/DiversifyDialogue/outputs/forward/dailydialogue_innitialize.json'
+    model_path = '/home/yuxi/Projects/DiversifyDialogue/models/forward/initialization/DailyDialogue/best_model'
 
     predict(model_args, test_path, output_path, model_path)

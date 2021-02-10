@@ -47,7 +47,7 @@ if __name__ == '__main__':
     model_args.reprocess_input_data = True
     model_args.save_eval_checkpoints = False
     model_args.save_steps = -1
-    model_args.train_batch_size = 8
+    model_args.train_batch_size = 16
     model_args.use_multiprocessing = False
     model_args.n_gpu = 1
 

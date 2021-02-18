@@ -2,7 +2,7 @@ import csv
 import sys
 from tqdm import tqdm
 
-from utils import json_dump
+from data.utils import json_dump
 
 def get_samples(filename):
     samples, avg_length = [], 0

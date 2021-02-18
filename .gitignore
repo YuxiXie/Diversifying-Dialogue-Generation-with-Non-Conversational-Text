@@ -130,3 +130,6 @@ dmypy.json
 .idea
 *.json
 *.csv
+*.tar
+src/forward/runs/
+src/forward/wandb/

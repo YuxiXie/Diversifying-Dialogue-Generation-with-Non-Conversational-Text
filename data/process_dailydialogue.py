@@ -2,6 +2,11 @@ import sys
 from tqdm import tqdm
 from data.utils import json_dump
 
+'''
+cmd args
+
+data\dailydialog\dialogues_text.txt data\dailydialog\dialogues_topic.txt data\dailydialog\dialogues_text.txt data\dailydialog\dialogues_act.txt data\dailydialog\dialogues_emotion.txt data\dailydialog\dialogue_json.json
+'''
 
 topics_dict = ['', 'Ordinary Life', 'School Life', 'Culture & Education',
           'Attitude & Emotion', 'Relationship', 'Tourism' , 'Health', 

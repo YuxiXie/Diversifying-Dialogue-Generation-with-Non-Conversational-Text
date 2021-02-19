@@ -4,6 +4,14 @@ from tqdm import tqdm
 
 from data.utils import json_dump
 
+'''
+cmd args
+
+data\empatheticdialogue\train.csv data\empatheticdialogue\train_json.json
+data\empatheticdialogue\test.csv data\empatheticdialogue\test_json.json
+data\empatheticdialogue\valid.csv data\empatheticdialogue\valid_json.json
+'''
+
 def get_samples(filename):
     samples, avg_length = {}, 0
     

@@ -7,9 +7,19 @@
     * **features**: 
         * avg length: `~30-`
         * multi-turn dialogue
-        * 10 topics in total: 1. `Ordinary Life`, 2. `School Life`, 3. `Culture & Education`, 4. `Attitude & Emotion`, 5. `Relationship`, 6. `Tourism` , 7. `Health`, 8. `Work`, 9. `Politics`, 10. `Finance`
+        * 10 topics in total: 
+          1. `Relationship`: 32807
+          2. `Ordinary Life`: 29256
+          3. `Work`:14802
+          4. `Tourism`: 8504
+          5. `School Life`: 4556
+          6. `Finance`: 4248
+          7. `Attitude & Emotion`: 4067
+          8. `Health`: 2632
+          9. `Politics`: 1583
+          10. `Culture & Education`: 524
         * daily & natural
-        
+
     * format:
     ```
     [
@@ -52,6 +62,53 @@
     * **featrues**
         * multi-turn
         * with situation and label for each conversation
+    * format
+
+    ```
+    [
+      {
+        "context": "devastated",
+        "length": 2,
+        "prompt": "When my mom got really ill and was in the hospital I wasn't able to visit her for about a week. It just also happened to be the week that she died. I was broken. I couldn't be there when she needed me the most. ",
+        "content": [
+          "The worst thing happened though. I wasn't able to see her for about a week because of not being allowed a bunch of time off",
+          "The company you work for is horrible. They should have gave you that time off because it was a family emergency."
+        ]
+      },
+      {
+        "context": "confident",
+        "length": 2,
+        "prompt": "I felt really good about myself when i got a job at a local firm. I felt a sudden boost in my self worth",
+        "content": [
+          "i felt really good about myself when i got a new job at a reputed firm",
+          "Wow. Congratulations! Is your new job near home?"
+        ]
+      },
+      .
+      .
+      .
+    ]
+    ```
+
+    * classification format
+
+    ```
+    [
+      {
+        "text": "The worst thing happened though. I wasn't able to see her for about a week because of not being allowed a bunch of time off",
+        "topic": "devastated"
+      },
+      {
+        "text": "The company you work for is horrible. They should have gave you that time off because it was a family emergency.",
+        "topic": "devastated"
+      },
+     .
+     .
+     .
+    ]
+    ```
+
+    
 
 ## Non-Conversational
 

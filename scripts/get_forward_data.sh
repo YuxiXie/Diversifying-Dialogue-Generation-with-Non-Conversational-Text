@@ -1,5 +1,5 @@
-EXEHOME=/home/yuxi/Projects/DiversifyDialogue/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/forward
-DATAHOME=/home/yuxi/Projects/DiversifyDialogue/data/DailyDialogue/processed
+EXEHOME=${HOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/forward
+DATAHOME=${HOME}/data/DailyDialogue/processed
 
 cd ${EXEHOME}
 

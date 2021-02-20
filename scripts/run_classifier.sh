@@ -10,9 +10,9 @@ mkdir -p ${MODELHOME}
 
 cd ${EXEHOME}
 
-export CUDA_VISIBLE_DEVICES=0,1
+export CUDA_VISIBLE_DEVICES=2,3
 
-python run_model.py \
+python train_classifier.py \
        --model_name_or_path bert-base-uncased \
        --model_type bert \
        --output_dir ${MODELHOME} \
@@ -22,9 +22,9 @@ python run_model.py \
        --eval_data_file ${DATAHOME}/dev.json \
        --line_by_line \
        --learning_rate 2e-5 \
-       --block_size 384 \
-       --per_gpu_train_batch_size 16 \
-       --per_gpu_eval_batch_size 8 \
+       --block_size 128 \
+       --per_gpu_train_batch_size 2 \
+       --per_gpu_eval_batch_size 2 \
        --do_train \
        --evaluate_during_training \
        --num_train_epochs 32

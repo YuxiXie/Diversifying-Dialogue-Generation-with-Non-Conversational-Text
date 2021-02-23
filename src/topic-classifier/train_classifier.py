@@ -470,14 +470,9 @@ def evaluate(args, model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prefi
             n_correct[0] += n_correct_vec.sum()
             n_correct[1] += prediction.size(0)
 
-            score_list += torch.softmax(logits, dim=-1)[:, 1].detach().cpu().tolist()
-            label_list += labels.detach().cpu().tolist()
-
         nb_eval_steps += 1
 
     eval_loss = eval_loss / nb_eval_steps
-
-    score_list, label_list = np.array(score_list), np.array(label_list)
 
     result = {
         "loss": eval_loss,

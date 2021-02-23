@@ -338,7 +338,8 @@ def train(args, train_dataset, model: PreTrainedModel, tokenizer: PreTrainedToke
             gt_pred_prb = torch.gather(F.softmax(logits, dim=-1), dim=-1, index=labels.unsqueeze(-1)).squeeze(1)
             # Focal Loss
             alpha_matrix = torch.Tensor([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-            alpha_matrix = torch.gather((alpha_matrix / alpha_matrix.max()).to(logits.device), 0, labels)
+            alpha_matrix = torch.gather((alpha_matrix / alpha_matrix.max()).to(logits.device), dim=0, index=labels)
+            
             loss = (loss_raw * torch.pow((1 - gt_pred_prb), 2) * alpha_matrix).mean()
 
             if args.n_gpu > 1:
@@ -747,7 +748,7 @@ def main():
         model = AutoModelForSequenceClassification.from_config(config)
 
     model.classifier = nn.Linear(768, 10)
-    model.num_labels = config.num_labels = 10
+    model.num_labels = config.num_labels = config.type_vocab_size = 10
     model.to(args.device)
 
     if args.local_rank == 0:

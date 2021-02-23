@@ -10,7 +10,7 @@ mkdir -p ${MODELHOME}
 
 cd ${EXEHOME}
 
-export CUDA_VISIBLE_DEVICES=2,3
+export CUDA_VISIBLE_DEVICES=1
 
 python train_classifier.py \
        --model_name_or_path bert-base-uncased \
@@ -23,8 +23,8 @@ python train_classifier.py \
        --line_by_line \
        --learning_rate 2e-5 \
        --block_size 128 \
-       --per_gpu_train_batch_size 2 \
-       --per_gpu_eval_batch_size 2 \
+       --per_gpu_train_batch_size 64 \
+       --per_gpu_eval_batch_size 64 \
        --do_train \
        --evaluate_during_training \
        --num_train_epochs 32

@@ -337,7 +337,7 @@ def train(args, train_dataset, model: PreTrainedModel, tokenizer: PreTrainedToke
             # Get the probability predicted for gold labels
             gt_pred_prb = torch.gather(F.softmax(logits, dim=-1), dim=-1, index=labels.unsqueeze(-1)).squeeze(1)
             # Focal Loss
-            alpha_matrix = torch.Tensor([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+            alpha_matrix = torch.Tensor([29256, 4556, 524, 4067, 32807, 8504, 2632, 14802, 1583, 4248])     # magic number - label distribution
             alpha_matrix = torch.gather((alpha_matrix / alpha_matrix.max()).to(logits.device), dim=0, index=labels)
             
             loss = (loss_raw * torch.pow((1 - gt_pred_prb), 2) * alpha_matrix).mean()

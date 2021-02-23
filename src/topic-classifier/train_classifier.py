@@ -464,7 +464,7 @@ def evaluate(args, model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prefi
 
             eval_loss += lm_loss.mean().item()
 
-            prediction = torch.max(logits.view(-1, 2), dim=-1)[1]   # TODO: magic number
+            prediction = torch.max(logits, dim=-1)[1]   # TODO: magic number
             n_correct_vec = prediction.eq(labels).float()
             
             n_correct[0] += n_correct_vec.sum()

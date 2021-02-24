@@ -89,23 +89,19 @@ def preprocess_dialogue_batch(batch, enc_rnn=False, dec_rnn=False,
     src_seq, src_pos = preprocess_input(src_seq, device=device)
     tgt_seq, tgt_pos = preprocess_input(tgt_seq, device=device)
 
-    #========== forward ==========#
     if enc_rnn:
         inputs['forward encoder']['src_seq'], inputs['forward encoder']['lengths'] = src_seq, lengths
-    else:
-        inputs['forward encoder']['src_seq'], inputs['forward encoder']['src_pos'] = src_seq, src_pos
-        if attn_mask:
-            inputs['forward encoder']['slf_attn_mask'] = get_slf_attn_mask(attn_mask=batch['attn_mask'], lengths=lengths[0], 
-                                                                           device=device)
+        inputs['backward encoder']['src_seq'], inputs['backward encoder']['lengths'] = tgt_seq, batch['tgt'][1]
 
     gold = {'forward': tgt_seq[:, 1:], 'backward': src_seq[:, 1:]}     # exclude [BOS] token
-    if not dec_rnn:
-        inputs['forward decoder']['tgt_seq'], inputs['forward decoder']['tgt_pos'] = tgt_seq[:, :-1], tgt_pos[:, :-1]   # exclude [EOS] token
-    else:
+    if dec_rnn:
         inputs['forward decoder']['tgt_seq'], inputs['forward decoder']['src_indexes'] = tgt_seq[:, :-1], get_sep_index(src_sep)
+        inputs['backward decoder']['tgt_seq'], inputs['backward decoder']['src_indexes'] = src_seq[:, :-1], get_sep_index(src_sep)
+    
     inputs['forward decoder']['src_seq'] = inputs['forward encoder']['src_seq']
-
+    inputs['backward decoder']['src_seq'] = inputs['backward encoder']['src_seq']
     inputs['forward encoder']['feat_seqs'], inputs['forward decoder']['feat_seqs'] = None, None
+    inputs['backward encoder']['feat_seqs'], inputs['backward decoder']['feat_seqs'] = None, None
         
     f_copy_gold, f_copy_switch = None, None
     if copy:

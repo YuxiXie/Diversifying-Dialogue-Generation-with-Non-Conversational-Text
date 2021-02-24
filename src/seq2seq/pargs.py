@@ -3,10 +3,8 @@ import argparse
 
 def add_options(parser):
     ##### ========== Data Files ========== #####
-    parser.add_argument('-train_src', help="Path to the training source data")
-    parser.add_argument('-train_tgt', help="Path to the training target data")
-    parser.add_argument('-valid_src', help="Path to the validation source data")
-    parser.add_argument('-valid_tgt', help="Path to the validation target data")
+    parser.add_argument('-train_file', help="Path to the training data")
+    parser.add_argument('-valid_file', help="Path to the validation data")
 
     parser.add_argument('-train_ans', default='', help="Path to the training answer")
     parser.add_argument('-valid_ans', default='', help="Path to the validation answer")

@@ -12,10 +12,10 @@ import torch.nn as nn
 from torch import cuda
 
 import onqg.dataset.Constants as Constants
-from onqg.dataset.Dataset import Dataset, DialogueDataset
+from onqg.dataset.Dataset import DialogueDataset
 from onqg.dataset.Vocab import Vocab
 
-from onqg.utils.model_builder import build_model
+from onqg.utils.model_builder import build_dialogue_model
 from onqg.utils.train.Loss import NLLLoss
 from onqg.utils.train.Optim import Optimizer
 from onqg.utils.train.DialogueSupervisedTrainer import DialogueSupervisedTrainer
@@ -73,7 +73,7 @@ def main(opt, logger):
     separate = -1
     device = torch.device('cuda:' + str(opt.gpus[0]) if len(opt.gpus) else 'cpu')
     checkpoint = torch.load(opt.checkpoint) if opt.checkpoint else None
-    model, parameters_cnt = build_model(opt, device, separate=separate, checkpoint=checkpoint)
+    model, parameters_cnt = build_dialogue_model(opt, device, separate=separate, checkpoint=checkpoint)
     logger.info(' * Number of parameters to learn = %d' % parameters_cnt)
 
     ##### ==================== Prepare Optimizer ==================== #####

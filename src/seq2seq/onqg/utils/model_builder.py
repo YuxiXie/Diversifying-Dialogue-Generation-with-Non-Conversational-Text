@@ -4,12 +4,10 @@ import torch.nn as nn
 from onqg.models.Models import OpenNQG, Dialoguer
 from onqg.models.encoders import RNNEncoder, TransfEncoder
 from onqg.models.decoders import RNNDecoder, TransfDecoder
-from transformers import AutoConfig, AutoModelWithLMHead, AutoModelForSequenceClassification
-from onqg.pytorch_pretrained_bert.modeling import BertForQuestionAnswering
 
 
 def build_encoder(opt, answer=False, separate=-1):
-    feat_vocab = opt.feat_vocab
+    feat_vocab = None
     if answer:
         feat_vocab = opt.ans_feat_vocab
     elif feat_vocab:
@@ -91,16 +89,28 @@ def initialize(model, opt):
             model.encoder.word_emb.weight.data.copy_(opt.pre_trained_src_emb)
         if opt.answer == 'enc':
             model.answer_encoder.word_emb.weight.data.copy_(opt.pre_trained_ans_emb)
-        model.decoder.word_emb.weight.data.copy_(opt.pre_trained_tgt_emb)
+        try:
+            model.decoder.word_emb.weight.data.copy_(opt.pre_trained_tgt_emb)
+        except:
+            model.forward_decoder.word_emb.weight.data.copy_(opt.pre_trained_tgt_emb)
+            model.backward_decoder.word_emb.weight.data.copy_(opt.pre_trained_tgt_emb)
     
     if opt.proj_share_weight:
-        weight = model.decoder.maxout(model.decoder.word_emb.weight.data)
+        try:
+            weight = model.decoder.maxout(model.decoder.word_emb.weight.data)
+        except:
+            weight = model.forward_decoder.maxout(model.forward_decoder.word_emb.weight.data)
+            weight = model.backward_decoder.maxout(model.backward_decoder.word_emb.weight.data)
         model.generator.weight.data.copy_(weight)
     
     weight = model.encoder.word_emb.weight.data
     # model.decoder.ans_emb.wieght.data.copy_(weight)
     if opt.src_vocab_size == opt.tgt_vocab_size:
-        model.decoder.word_emb.weight.data.copy_(weight)
+        try:
+            model.decoder.word_emb.weight.data.copy_(weight)
+        except:
+            model.forward_decoder.word_emb.weight.data.copy_(weight)
+            model.backward_decoder.word_emb.weight.data.copy_(weight)
 
     return model, parameters_cnt
 

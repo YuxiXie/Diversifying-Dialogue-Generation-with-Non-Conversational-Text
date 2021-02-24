@@ -1,6 +1,7 @@
 import math
 import torch
 import argparse
+import csv
 from tqdm import tqdm
 
 import pargs
@@ -16,14 +17,6 @@ def load_vocab(filename):
     vocab_dict = {word[0]:word[1:] for word in text}
     vocab_dict = {k:[float(d) for d in v] for k,v in vocab_dict.items()}
     return vocab_dict
-
-
-def load_file(filename):
-    with open(filename, 'r', encoding='utf-8') as f:
-        data = f.read().strip()
-    data = data.split('\n')
-    data = [sent.strip().split() for sent in data]
-    return data
 
 
 def convert_word_to_idx(data, vocabularies, opt):
@@ -95,14 +88,14 @@ def get_embedding(vocab_dict, vocab):
     return embedding
 
 
-def get_data(files, opt):
-    rst = {'src': None, 'tgt': None, 'ans': None, 
-           'feature': None, 'ans_feature': None}
-    for k, v in files.items():
-        if isinstance(v, list):
-            rst[k] = [load_file(f) for f in v]
-        else:
-            rst[k] = load_file(v)
+def get_data(filename):
+    rst = {'src': [], 'tgt': []}
+    
+    with open(filename, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rst['src'].append(row['input_text'])
+            rst['tgt'].append(row['target_text'])
 
     return rst
 
@@ -130,11 +123,8 @@ def wrap_copy_idx(splited, tgt, tgt_vocab, bert, vocab_dict):
 
 def main(opt):
     #========== get data ==========#
-    train_files = {'src':opt.train_src, 'tgt':opt.train_tgt}
-    valid_files = {'src':opt.valid_src, 'tgt':opt.valid_tgt}
-    
-    train_data = get_data(train_files, opt)
-    valid_data = get_data(valid_files, opt)
+    train_file, valid_file = opt.train_file, opt.valid_file
+    train_data, valid_data = get_data(train_file), get_data(valid_file)
 
     #========== build vocabulary ==========#
     vocabularies = {}
@@ -213,7 +203,7 @@ def main(opt):
         }
     
     torch.save(data, opt.save_data)
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
 
 
 if __name__ == '__main__':

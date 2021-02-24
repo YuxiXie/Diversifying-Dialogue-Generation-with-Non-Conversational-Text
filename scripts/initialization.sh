@@ -12,10 +12,12 @@ mkdir -p ${LOGHOME}
 
 cd ${EXEHOME}
 
+export CUDA_VISIBLE_DEVICES=0
+
 python train.py \
        -gpus 0 \
        -data ${DATAHOME}/basic_uncased_data_128.pt \
-       -epoch 100 -batch_size 64 -eval_batch_size 32 \
+       -epoch 100 -batch_size 4 -eval_batch_size 4 \
        -max_token_src_len 128 -max_token_tgt_len 128 \
        -copy -coverage -coverage_weight 0.4 \
        -d_word_vec 300 \

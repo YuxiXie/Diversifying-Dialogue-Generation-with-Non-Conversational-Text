@@ -312,7 +312,7 @@ class DialogueDataset(object):
                                            align_right=False, include_lengths=True)
         tgtBatch = None
         if self.tgt:
-            tgtBatch = self._batchify(self.tgt[index * self.batchSize: (index + 1) * self.batchSize])
+            tgtBatch, tgt_lengths = self._batchify(self.tgt[index * self.batchSize: (index + 1) * self.batchSize], include_lengths=True)
 
         idxBatch = self.idxs[index * self.batchSize: (index + 1) * self.batchSize]
         
@@ -333,6 +333,7 @@ class DialogueDataset(object):
 
         # wrap lengths in a Variable to properly split it in DataParallel
         lengths = torch.LongTensor(lengths).view(1, -1)     # .to(self.device)
+        tgt_lengths = torch.LongTensor(tgt_lengths).view(1, -1)
         indices = range(len(srcBatch))
         
         rst = {}
@@ -340,7 +341,7 @@ class DialogueDataset(object):
         rst['src'] = (wrap(srcBatch), lengths)
         rst['raw-index'] = idxBatch
         if self.has_tgt:
-            rst['tgt'] = wrap(tgtBatch)
+            rst['tgt'] = (wrap(tgtBatch), tgt_lengths)
         if self.copy:
             rst['copy'] = {
                 'forward': (wrap(copyForwardSwitchBatch), wrap(copyForwardTgtBatch)),

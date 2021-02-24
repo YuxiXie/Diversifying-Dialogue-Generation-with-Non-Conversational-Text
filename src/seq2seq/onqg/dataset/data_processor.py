@@ -82,12 +82,12 @@ def preprocess_dialogue_batch(batch, enc_rnn=False, dec_rnn=False,
     
     inputs = {'forward encoder':{}, 'forward decoder':{}, 'backward encoder':{}, 'backward decoder': {}}
 
-    src_seq, tgt_seq = batch['src'], batch['tgt']
+    src_seq, tgt_seq = batch['src'], batch['tgt'][0]
     src_seq, lengths = src_seq[0], src_seq[1]        
     src_sep = None
     
-    src_seq, src_pos = preprocess_input(src_seq, device=device)
-    tgt_seq, tgt_pos = preprocess_input(tgt_seq, device=device)
+    src_seq, _ = preprocess_input(src_seq, device=device)
+    tgt_seq, _ = preprocess_input(tgt_seq, device=device)
 
     if enc_rnn:
         inputs['forward encoder']['src_seq'], inputs['forward encoder']['lengths'] = src_seq, lengths

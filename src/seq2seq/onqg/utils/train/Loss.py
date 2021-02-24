@@ -121,7 +121,7 @@ class NLLLoss(Loss):
             pred_prob_log = pred_prob_log * ((1 - copy_switch).unsqueeze(2).expand_as(pred_prob_log))
 
             pred_prob_log = pred_prob_log.view(-1, pred_prob_log.size(2))
-            copy_pred_prob_log = copy_pred_prob_log.view(-1, copy_pred_prob_log.size(2))
+            copy_pred_prob_log = copy_pred_prob_log.contiguous().view(-1, copy_pred_prob_log.size(-1))
             
             pred_loss = self.criterion(pred_prob_log, gold.view(-1))
             copy_loss = self.copy_loss(copy_pred_prob_log, copy_gold.contiguous().view(-1))

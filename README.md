@@ -31,11 +31,14 @@ Adapt from
 |—— README.md
 |—— LICENSE
 |—— scripts
+|   |-- initialization.sh
+|   |-- preprocess_initialization.sh
+|   |-- run_classifier.sh
 |   |—— run_forward.sh
 |   |—— get_forward_data.sh
 |—— src
 |   |—— forward
-|   |—— backward
+|   |—— seq2seq
 |   |__ topic-classifier
 |__ data
 	|—— data
@@ -75,17 +78,16 @@ pip install -r requirements.txt
 ## Train
 
 ### Dialogue Generation
-1. Initilization of forward & backward Seq2Seq models
+1. Initialization of forward & backward Seq2Seq models
     ```
-    bash scripts/get_forward_data.sh
-    bash scripts/run_forward.sh
-
-    bash scripts/get_backward_data.sh
-    bash scripts/run_backward.sh
+    bash scripts/preprocess_initialization.sh
+    bash scripts/initialization.sh
     ```
-    _PS_: After data processing by `get_forward/backward_data.sh`, the processed data is output in `.csv`-file with headers `prefix,input_text,target_text`
-
+    
 ### Topic Classification
-
+1. Training of topic classifier BERT model
+    ```
+    bash scripts/run_classifier.sh
+    ```
 
 ## Evaluate

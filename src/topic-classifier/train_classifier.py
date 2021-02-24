@@ -38,7 +38,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_sequence
-from torch.utils.data import DataLoader, Dataset, SequentialSampler, RandomSampler
+from torch.utils.data import DataLoader, Dataset, SequentialSampler, RandomSampler, DistributedSampler
 from tqdm import tqdm, trange
 
 from transformers import (

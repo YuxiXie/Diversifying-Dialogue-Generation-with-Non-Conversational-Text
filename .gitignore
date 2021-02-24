@@ -131,5 +131,8 @@ dmypy.json
 *.json
 *.csv
 *.tar
+.nv/
 src/forward/runs/
 src/forward/wandb/
+models/
+*.pt

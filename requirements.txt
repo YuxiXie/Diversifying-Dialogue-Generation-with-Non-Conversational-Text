@@ -8,3 +8,4 @@ simpletransformers==0.60.6
 transformers==4.3.0
 wandb==0.10.18
 torch==1.7.1
+nltk==3.5

@@ -112,7 +112,10 @@ class DialogueTranslator(object):
             ### ========== Prepare data ========== ###
             if len(self.opt.gpus) > 1:
                 model = model.module
-            encoder_name, decoder_name = 'forward encoder', 'forward decoder' if not self.reverse else 'backward encoder', 'backward decoder'
+            if not self.reverse:
+                encoder_name, decoder_name = 'forward encoder', 'forward decoder'  
+            else:
+                encoder_name, decoder_name = 'backward encoder', 'backward decoder'
 
             ### ========== Encode ========== ###
             enc_output, hidden = model.encoder(inputs[encoder_name])

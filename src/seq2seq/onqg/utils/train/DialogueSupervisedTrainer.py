@@ -15,7 +15,7 @@ from onqg.dataset.data_processor import preprocess_dialogue_batch
 
 def record_log(logfile, step, loss, ppl, accu, bleu='unk', bad_cnt=0, lr='unk'):
     accu = '{f:3.8f}%/{b:3.8f}%'.format(f=accu[0], b=accu[1])
-    bleu = '{f:3.5f}/{b:3.5f}'.format(f=bleu[0], b=bleu[1]) if bleu != 'unk' else 'unk'
+    bleu = '{f:3.5f}/{b:3.5f}'.format(f=bleu[0], b=bleu[1]) if len(bleu) == 2 else 'unk'
     
     with open(logfile, 'a', encoding='utf-8') as f:
         f.write(str(step) + ':\tloss=' + str(round(loss, 8)) + ',\tppl=' + str(round(ppl, 8)))

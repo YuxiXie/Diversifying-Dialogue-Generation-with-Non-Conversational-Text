@@ -68,7 +68,7 @@ Adapt from
 * [Trump Tweets](https://data.world/lovesdata/trump-tweets-5-4-09-12-5-16)
 * [Medical-NLP](https://github.com/socd06/medical-nlp)
 * [ELI5](https://www.aclweb.org/anthology/P19-1346)
-* [Stanford Sentiment Treebank](https://blog.cambridgespark.com/50-free-machine-learning-datasets-sentiment-analysis-b9388f79c124)
+* [Stanford Sentiment Treebank](https://nlp.stanford.edu/sentiment/code.html)
 
 ## Experiment Setup 
 ```

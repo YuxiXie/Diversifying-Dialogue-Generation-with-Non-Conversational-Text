@@ -128,8 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .idea
-*.json
-*.csv
 *.tar
 .nv/
 src/forward/runs/

@@ -1,4 +1,5 @@
 import sys
+import random
 from tqdm import tqdm
 from data.utils import json_load, json_dump
 
@@ -32,13 +33,19 @@ def convert_samples_with_filter(filename, filter_list=[], max_len=100):
 def convert_samples(filename):
     samples = json_load(filename)
     output = []
+    output2 = []
+    random.seed(9)
     for sample in tqdm(samples):
         topic = sample['topic']
         content = sample['content']
         for turn in content:
-            output.append({'text': turn['text'], 'topic': topic})
-
-    return output
+            if random.random() >= 0.2:
+                output.append({'text': turn['text'], 'topic': topic})
+            else:
+                output2.append({'text': turn['text'], 'topic': topic})
+                
+    result = [output, output2]
+    return result
 
 
 if __name__ == '__main__':
@@ -48,3 +55,5 @@ if __name__ == '__main__':
 
     json_dump(convert_samples_with_filter(input_file, filter_list), output_file)
     # json_dump(convert_samples(input_file), output_file)
+
+

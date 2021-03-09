@@ -26,6 +26,7 @@ def get_samples(text_file, act_file, emotion_file, topics):
     samples, avg_length = [], 0
     for txt, act, emotion in tqdm(zip(text, acts, emotions)):
         topic = topics_dict[topics[txt]]
+        if not(topic == 'Attitude & Emotion' or topic == "Health" or topic == "Politics"): continue
         txt, act, emotion = txt.split(' __eou__ '), act.split(), emotion.split()
         
         content = []

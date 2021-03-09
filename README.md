@@ -66,9 +66,11 @@ Adapt from
 ### Non-conversational
 * [Twitter](https://github.com/shaypal5/awesome-twitter-data)
 * [Trump Tweets](https://data.world/lovesdata/trump-tweets-5-4-09-12-5-16)
+* [Inaugural](https://github.com/brianray/data.world-scripts/blob/master/load%20inaugural%20addresses.ipynb)
 * [Medical-NLP](https://github.com/socd06/medical-nlp)
-* [ELI5](https://www.aclweb.org/anthology/P19-1346)
 * [Stanford Sentiment Treebank](https://nlp.stanford.edu/sentiment/code.html)
+* [Sentiment140](http://help.sentiment140.com/for-students/)
+* [ELI5](https://www.aclweb.org/anthology/P19-1346)
 
 ## Experiment Setup 
 ```

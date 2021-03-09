@@ -119,7 +119,6 @@
         * balanced labels ( positive : negative = 1 : 1 )
         * neat
         * subjective
-
 * ***Twitter for Stanford***
     * **size**: 1600000
     * **features**
@@ -130,9 +129,19 @@
         * labels (negative : neutral : positive = 800k:0:800k)
             * no neutral labels
         * all @mentions and #hashtags are removed
-
 * ***ELI5***
-    * **size**: 72w
+    * **size**: 720,000
     * **features**
         * QA dataset: labels contain `declarative` & `question`
         
+* ***Trump Tweets***
+    * **size**: 60,463
+* ***Inaugural***
+    * **size**: 5,153
+* ***Medical-NLP***
+    * **size**: 4,999
+* ***Stanford Sentiment Treebank***
+    * **size**: 11,855
+* ***Sentiment140***
+    * **size**: 1,048,576 (top 10,000 chosen)
+

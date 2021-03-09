@@ -1,13 +1,11 @@
 
 import random
 from tqdm import tqdm
-from utils import json_load, json_dump
+import json
+import codecs
 
-'''
-cmd args
-
-data\dailydialog\dialogue_json.json data\dailydialog\dialogue_json_classified.json
-'''
+json_load = lambda x: json.load(codecs.open(x, 'r', encoding='utf-8'))
+json_dump = lambda d, p: json.dump(d, codecs.open(p, 'w', 'utf-8'), indent=2, ensure_ascii=False)
 
 
 def combine_jsons(filenames, amounts):
@@ -19,7 +17,6 @@ def combine_jsons(filenames, amounts):
         input_file = json_load(filename)
         random.shuffle(input_file)  #randomly select the input text
         amount = 0
-        print(max_amount)
         for item in tqdm(input_file):
             output.append(item)
             amount += 1

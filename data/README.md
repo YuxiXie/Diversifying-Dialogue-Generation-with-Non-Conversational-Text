@@ -133,15 +133,26 @@
     * **size**: 720,000
     * **features**
         * QA dataset: labels contain `declarative` & `question`
-        
+    
 * ***Trump Tweets***
     * **size**: 60,463
+    * **features**
+      * all @mentions, #hashtags and http addresses are removed
 * ***Inaugural***
     * **size**: 5,153
+    * **features**
+      * neat and  complete speeches, no further process needed
 * ***Medical-NLP***
     * **size**: 4,999
+    * **features**
+      * all corrupted characters are removed
 * ***Stanford Sentiment Treebank***
     * **size**: 11,855
+    * **features**
+      * nice and easy reading sentences
+      * problems with punctuation marks (unnecessary spaces, incorrect quotation marks) are resolved
 * ***Sentiment140***
     * **size**: 1,048,576 (top 10,000 chosen)
+    * **features**
+      * all @mentions, #hashtags, http addresses and html marks are removed
 

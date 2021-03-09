@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Mar 10 01:21:57 2021
 
-@author: tianz
-"""
 from tqdm import tqdm
-from utils import json_dump
 import os
 import re
+
+import json
+import codecs
+
+json_load = lambda x: json.load(codecs.open(x, 'r', encoding='utf-8'))
+json_dump = lambda d, p: json.dump(d, codecs.open(p, 'w', 'utf-8'), indent=2, ensure_ascii=False)
+
 
 def process_data():
     output = []

@@ -1,7 +1,12 @@
 import csv
 from tqdm import tqdm
 
-from utils import json_dump
+import json
+import codecs
+
+json_load = lambda x: json.load(codecs.open(x, 'r', encoding='utf-8'))
+json_dump = lambda d, p: json.dump(d, codecs.open(p, 'w', 'utf-8'), indent=2, ensure_ascii=False)
+
 
 def process_data(filename):
     output = []
@@ -11,7 +16,7 @@ def process_data(filename):
         next(data)
         total = 0
         for row in tqdm(data):
-            output.append({"text": row[1], "topic": "Health"})
+            output.append({"text": ' '.join(row[1].split()), "topic": "Health"})
             total += 1
             
     return output, total

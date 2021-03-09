@@ -2,8 +2,8 @@
 
 set -x
 
-DATAHOME=${HOME}/data/DailyDialogue/processed
-EXEHOME=${HOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/seq2seq
+DATAHOME=${PROJECTHOME}/data/DailyDialogue/processed
+EXEHOME=${PROJECTHOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/seq2seq
 
 cd ${EXEHOME}
 

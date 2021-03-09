@@ -92,9 +92,9 @@ class DialogueSupervisedTrainer(object):
                 torch.save(checkpoint, model_name)
                 print('    - [Info] The checkpoint file has been updated.')
         
-        if bleu != 'unk' and bleu > self.best_bleu:
+        if len(bleu) == 2 and bleu[0] + bleu[1] > self.best_bleu:
             self.best_bleu = bleu
-            model_name = self.opt.save_model + '_' + str(round(bleu * 100, 5)) + '_bleu4.chkpt'
+            model_name = self.opt.save_model + '_' + str(round(bleu[0] * 100, 5)) + '_bleu4.chkpt'
             torch.save(checkpoint, model_name)
 
     def eval_step(self, device, epoch):
@@ -143,7 +143,7 @@ class DialogueSupervisedTrainer(object):
             perplexity = math.exp(min(loss_per_word, 16))
 
             if (perplexity <= self.opt.translate_ppl or perplexity > self.best_ppl):
-                if self.cntBatch % self.opt.translate_steps == 0: 
+                if self.cntBatch % self.opt.translate_steps == 0 or self.cntBatch > -1: 
                     bleu = (
                         self.forward_translator.eval_all(self.model, self.validation_data),
                         self.backward_translator.eval_all(self.model, self.validation_data)

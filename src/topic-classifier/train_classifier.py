@@ -743,7 +743,7 @@ def main():
         model = AutoModelForSequenceClassification.from_config(config)
 
     model.classifier = nn.Linear(768, 10)
-    model.num_labels = config.num_labels = config.type_vocab_size = 10
+    model.num_labels = config.num_labels = 10
     model.to(args.device)
 
     if args.local_rank == 0:

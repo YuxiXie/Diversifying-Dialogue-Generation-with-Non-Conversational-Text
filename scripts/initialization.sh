@@ -2,10 +2,10 @@
 
 set -x
 
-DATAHOME=${HOME}/data/DailyDialogue/processed
-EXEHOME=${HOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/seq2seq
-MODELHOME=${HOME}/models/seq2seq/initialization
-LOGHOME=${HOME}/models/seq2seq/initialization/logs
+DATAHOME=${PROJECTHOME}/data/DailyDialogue/processed
+EXEHOME=${PROJECTHOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/seq2seq
+MODELHOME=${PROJECTHOME}/models/seq2seq/initialization
+LOGHOME=${PROJECTHOME}/models/seq2seq/initialization/logs
 
 mkdir -p ${MODELHOME}
 mkdir -p ${LOGHOME}
@@ -32,4 +32,4 @@ python train.py \
        -log_home ${LOGHOME} \
        -translate_ppl 20 \
        -curriculum 0  -extra_shuffle -optim adam -learning_rate 0.001 -learning_rate_decay 0.75 \
-       -valid_steps 500 -translate_steps 2500 -decay_steps 500 -start_decay_steps 5000 -decay_bad_cnt 5 -max_grad_norm 5 -max_weight_value 32 
+       -valid_steps 1 -translate_steps 500 -decay_steps 500 -start_decay_steps 5000 -decay_bad_cnt 5 -max_grad_norm 5 -max_weight_value 32 

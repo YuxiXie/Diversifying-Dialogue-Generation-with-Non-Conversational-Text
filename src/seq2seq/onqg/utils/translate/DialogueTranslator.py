@@ -284,7 +284,9 @@ class DialogueTranslator(object):
 
         valid_length = len(validData)
         eval_index_list = range(valid_length)
-        
+
+        eval_index_list = random.sample(range(valid_length), 1) 
+        # import ipdb; ipdb.set_trace()
         for idx in tqdm(eval_index_list, mininterval=2, desc='   - (Translating)   ', leave=False):
             ### ========== Prepare data ========== ###
             batch = validData[idx]

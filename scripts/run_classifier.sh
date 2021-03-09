@@ -2,9 +2,9 @@
 
 set -x
 
-DATAHOME=${HOME}/data/DailyDialogue/processed-for-classification
-EXEHOME=${HOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/topic-classifier
-MODELHOME=${HOME}/models/classifier
+DATAHOME=${PROJECTHOME}/data/DailyDialogue/processed-for-classification
+EXEHOME=${PROJECTHOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/topic-classifier
+MODELHOME=${PROJECTHOME}/models/classifier
 
 mkdir -p ${MODELHOME}
 

@@ -1,3 +1,0 @@
-
-COVID Twitter
-https://github.com/thepanacealab/covid19_twitter/blob/master/COVID_19_dataset_Tutorial.ipynb

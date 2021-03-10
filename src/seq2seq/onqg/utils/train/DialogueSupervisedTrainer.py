@@ -93,8 +93,8 @@ class DialogueSupervisedTrainer(object):
                 print('    - [Info] The checkpoint file has been updated.')
         
         if len(bleu) == 2 and bleu[0] + bleu[1] > self.best_bleu:
-            self.best_bleu = bleu
-            model_name = self.opt.save_model + '_' + str(round(bleu[0] * 100, 5)) + '_bleu4.chkpt'
+            self.best_bleu = bleu[0] + bleu[1]
+            model_name = self.opt.save_model + '_' + str(round(bleu[0] * 100, 5)) + '_' + str(round(bleu[1] * 100, 5)) + '_bleu4.chkpt'
             torch.save(checkpoint, model_name)
 
     def eval_step(self, device, epoch):

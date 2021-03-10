@@ -45,17 +45,17 @@ class SeqTextDataset(Dataset):
 
 def classify(model_dir, samples, device, tokenizer):
     config = AutoConfig.from_pretrained(model_dir)
-    config.num_labels = 10
+    config.num_labels = 3
     config.token_vocab_size = 2
     model = AutoModelForSequenceClassification.from_config(config)
-    model.classifier = nn.Linear(768, 10)
-    model.bert.embeddings.token_type_embeddings = nn.Linear(768, 2, bias=False)
-    model.num_labels = 10
+    model.classifier = nn.Linear(768, 3)
+    # model.bert.embeddings.token_type_embeddings = nn.Linear(768, 2, bias=False)
+    model.num_labels = 3
 
     state_dict = torch.load(model_dir + '/pytorch_model.bin')
     # import ipdb; ipdb.set_trace()
     model.load_state_dict(state_dict)
-    model.bert.embeddings.token_type_embeddings = nn.Linear(2, 768, bias=False)
+    # model.bert.embeddings.token_type_embeddings = nn.Linear(2, 768, bias=False)
 
     model.to(device)
     model.eval()

@@ -61,8 +61,7 @@ MODEL_CONFIG_CLASSES = list(MODEL_FOR_SEQUENCE_CLASSIFICATION_MAPPING.keys())
 MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
 
 LABEL_DICT = {
-    'Ordinary Life': 0, 'School Life': 1, 'Culture & Education': 2, 'Attitude & Emotion': 3, 
-    'Relationship': 4, 'Tourism': 5, 'Health': 6, 'Work': 7, 'Politics': 8, 'Finance': 9,
+    'Attitude & Emotion': 0, 'Health': 1, 'Politics': 2
 }
 
 
@@ -337,7 +336,7 @@ def train(args, train_dataset, model: PreTrainedModel, tokenizer: PreTrainedToke
             # Get the probability predicted for gold labels
             gt_pred_prb = torch.gather(F.softmax(logits, dim=-1), dim=-1, index=labels.unsqueeze(-1)).squeeze(1)
             # Focal Loss
-            alpha_matrix = torch.Tensor([29256, 4556, 524, 4067, 32807, 8504, 2632, 14802, 1583, 4248])     # magic number - label distribution
+            alpha_matrix = torch.Tensor([4067, 2632, 1583])     # magic number - label distribution
             alpha_matrix = torch.gather((alpha_matrix / alpha_matrix.max()).to(logits.device), dim=0, index=labels)
             
             loss = (loss_raw * torch.pow((1 - gt_pred_prb), 2) * alpha_matrix).mean()
@@ -742,8 +741,8 @@ def main():
         logger.info("Training new model from scratch")
         model = AutoModelForSequenceClassification.from_config(config)
 
-    model.classifier = nn.Linear(768, 10)
-    model.num_labels = config.num_labels = 10
+    model.classifier = nn.Linear(768, 3)
+    model.num_labels = config.num_labels = 3
     model.to(args.device)
 
     if args.local_rank == 0:

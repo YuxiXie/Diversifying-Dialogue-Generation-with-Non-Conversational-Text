@@ -26,18 +26,25 @@ def combine_jsons(filenames, amounts):
     return output, total
 
 if __name__ == '__main__':
-    input_files = ["medical_data - 4999.json", 
-                   "sentiment_140 - 100000.json", 
+    input_files = ["medical_data - 4993.json", 
+                    # "sentiment_140 - 100000.json", 
+                    "sentiment_140 - 1048523.json", 
                    "stanford_sentiment_treebank - 11855.json", 
                    "inaugural - 5153.json", 
-                   "trump_twitter_2016 - 30078.json", 
-                   "trump_twitter_2017 - 30385.json"]
-    input_amounts = [4999, 
-                    67993, 
+                   "trump_twitter_2016 - 29973.json", 
+                   "trump_twitter_2017 - 30279.json"]
+    input_amounts = [4993, #-1 means all
+                    67999, 
                     11855, 
                     5153, 
                     5000, 
                     5000]
+    input_amounts = [-1, #-1 means all
+                    -1, 
+                    -1, 
+                    -1, 
+                    -1, 
+                    -1]
     output_data = combine_jsons(input_files, input_amounts)
     output_file = "combined_jsons - " + str(output_data[1]) + ".json"
 

@@ -16,7 +16,9 @@ def process_data(filename):
         next(data)
         total = 0
         for row in tqdm(data):
-            output.append({"text": ' '.join(row[1].split()), "topic": "Health"})
+            processed_text = ' '.join(row[1].split())
+            if processed_text == "": continue
+            output.append({"text": processed_text, "topic": "Health"})
             total += 1
             
     return output, total

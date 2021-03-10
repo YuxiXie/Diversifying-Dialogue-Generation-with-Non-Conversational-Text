@@ -15,9 +15,11 @@ def process_data(filename):
         data = csv.reader(f)
         total = 0
         for row in tqdm(data):
-            output.append({"text": remove_unnecessary_parts(row[5]), "topic": "Attitude & Emotion"})
+            processed_row = remove_unnecessary_parts(row[5])
+            if processed_row == "": continue
+            output.append({"text": processed_row, "topic": "Attitude & Emotion"})
             total += 1
-            if total == 100000: break
+            # if total == 100000: break
         
     return output, total
 

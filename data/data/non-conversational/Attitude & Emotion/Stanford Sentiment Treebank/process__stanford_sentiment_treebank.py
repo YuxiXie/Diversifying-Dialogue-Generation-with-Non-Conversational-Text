@@ -17,6 +17,8 @@ def process_data(filename):
         for text in tqdm(data):
             tab_position = text.find("\t")
             text = text[tab_position + 1 :]
+            text = text.strip()
+            if text == "": continue
             output.append({"text": text, "topic": "Attitude & Emotion"})
             total += 1
 

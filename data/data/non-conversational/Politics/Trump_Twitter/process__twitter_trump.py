@@ -16,7 +16,9 @@ def process_data(filename):
         next(data)
         total = 0
         for row in tqdm(data):
-            output.append({"text": remove_unnecessary_parts(row[2]), "topic": "Politics"})
+            processed_row = remove_unnecessary_parts(row[2])
+            if processed_row == "": continue
+            output.append({"text": processed_row, "topic": "Politics"})
             total += 1
         
     return output, total

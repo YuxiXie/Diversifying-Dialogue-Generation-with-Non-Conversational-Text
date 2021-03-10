@@ -28,20 +28,23 @@ class Dialoguer(nn.Module):
         self.decoder_type = self.forward_decoder.name
         assert self.forward_decoder.name == self.backward_decoder.name, " - Types of two decoders should be the same. "
     
-    def forward(self, inputs):
-        #=========== forward ===========#
-        # encoding
-        inputs['forward decoder']['enc_output'], inputs['forward decoder']['hidden'] = self.encoder(inputs['forward encoder'])
-        # decoding
-        f_dec_output = self.forward_decoder(inputs['forward decoder'], generator=self.forward_generator)
-        f_dec_output['pred'] = self.forward_generator(f_dec_output['pred'])
+    def forward(self, inputs, mode='initialization'):
+        f_dec_output, b_dec_output = None, None
         
-        #=========== backward ===========#
-        # encoding
-        inputs['backward decoder']['enc_output'], inputs['backward decoder']['hidden'] = self.encoder(inputs['backward encoder'])
-        # decoding
-        b_dec_output = self.backward_decoder(inputs['backward decoder'], generator=self.backward_generator)
-        b_dec_output['pred'] = self.backward_generator(b_dec_output['pred'])
+        if mode in ['initialization', 'forward']:
+            #=========== forward ===========#
+            # encoding
+            inputs['forward decoder']['enc_output'], inputs['forward decoder']['hidden'] = self.encoder(inputs['forward encoder'])
+            # decoding
+            f_dec_output = self.forward_decoder(inputs['forward decoder'], generator=self.forward_generator)
+            f_dec_output['pred'] = self.forward_generator(f_dec_output['pred'])
+        if mode in ['initialization', 'backward']:
+            #=========== backward ===========#
+            # encoding
+            inputs['backward decoder']['enc_output'], inputs['backward decoder']['hidden'] = self.encoder(inputs['backward encoder'])
+            # decoding
+            b_dec_output = self.backward_decoder(inputs['backward decoder'], generator=self.backward_generator)
+            b_dec_output['pred'] = self.backward_generator(b_dec_output['pred'])
 
         return f_dec_output, b_dec_output
 

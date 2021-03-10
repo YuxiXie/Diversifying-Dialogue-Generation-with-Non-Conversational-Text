@@ -73,6 +73,10 @@ def initialize(model, opt):
     parameters_cnt = 0
     for name, para in model.named_parameters():
         if not opt.pretrained or name.count('encoder') == 0 == 0:
+            if opt.mode == 'forward' and name.count('backward_decoder') or opt.mode == 'backward' and name.count('forward_decoder'):
+                para.requires_grad = False
+                continue
+            
             if para.dim() == 1:
                 para.data.normal_(0, math.sqrt(6 / (1 + para.size(0))))
             else:

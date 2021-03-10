@@ -18,7 +18,8 @@ export CUDA_VISIBLE_DEVICES=1
 
 python train.py \
        -gpus 0 \
-       -data ${DATAHOME}/basic_uncased_data_128.pt \
+       -checkpoint ${MODELHOME}/initialization.chkpt \
+       -data ${DATAHOME}/politics_uncased_data_128.pt \
        -epoch 50 -batch_size 64 -eval_batch_size 32 \
        -max_token_src_len 128 -max_token_tgt_len 128 \
        -copy -coverage -coverage_weight 0.4 \
@@ -27,9 +28,9 @@ python train.py \
        -d_dec_model 512 -n_dec_layer 1 -dec_rnn gru -d_k 64 \
        -maxout_pool_size 2 -n_warmup_steps 10000 \
        -dropout 0.3 -attn_dropout 0.1 \
-       -save_mode best -save_model ${MODELHOME}/initialization \
-       -logfile_train ${LOGHOME}/initialization.train \
-       -logfile_dev ${LOGHOME}/initialization.dev \
+       -save_mode best -save_model ${MODELHOME}/initialization-politics \
+       -logfile_train ${LOGHOME}/initialization-politics.train \
+       -logfile_dev ${LOGHOME}/initialization-politics.dev \
        -log_home ${LOGHOME} \
        -translate_ppl 20 -translate_steps 500 \
        -curriculum 0  -extra_shuffle -optim adam -learning_rate 0.001 -learning_rate_decay 0.75 \

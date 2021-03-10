@@ -51,26 +51,31 @@ class DialogueSupervisedTrainer(object):
         forward: pred, gold, copy_pred, copy_gate, copy_gold, copy_switch, coverage_pred
         backward: ...
         '''
+        loss = 0
+        if self.opt.mode in ['initialization', 'forward']:
+            loss += self.loss.cal_loss(loss_input['forward'])
+        if self.opt.mode in ['initialization', 'backward']:
+            loss += self.loss.cal_loss(loss_input['backward'])
 
-        loss = self.loss.cal_loss(loss_input['forward']) + self.loss.cal_loss(loss_input['backward'])
+        f_n_correct, b_n_correct = None, None
+        if self.opt.mode in ['initialization', 'forward']:
+            ##=== forward ===##
+            f_gold, f_pred = loss_input['forward']['gold'], loss_input['forward']['pred']
 
-        ##=== forward ===##
-        f_gold, f_pred = loss_input['forward']['gold'], loss_input['forward']['pred']
+            f_pred = f_pred.contiguous().view(-1, f_pred.size(2)).max(1)[1]
+            f_gold = f_gold.contiguous().view(-1)
 
-        f_pred = f_pred.contiguous().view(-1, f_pred.size(2)).max(1)[1]
-        f_gold = f_gold.contiguous().view(-1)
+            f_n_correct = f_pred.eq(f_gold)
+            f_n_correct = f_n_correct.masked_select(f_gold.ne(Constants.PAD)).sum().item()
+        if self.opt.mode in ['initialization', 'backward']:
+            ##=== backward ===##
+            b_gold, b_pred = loss_input['backward']['gold'], loss_input['backward']['pred']
 
-        f_n_correct = f_pred.eq(f_gold)
-        f_n_correct = f_n_correct.masked_select(f_gold.ne(Constants.PAD)).sum().item()
+            b_pred = b_pred.contiguous().view(-1, b_pred.size(2)).max(1)[1]
+            b_gold = b_gold.contiguous().view(-1)
 
-        ##=== backward ===##
-        b_gold, b_pred = loss_input['backward']['gold'], loss_input['backward']['pred']
-
-        b_pred = b_pred.contiguous().view(-1, b_pred.size(2)).max(1)[1]
-        b_gold = b_gold.contiguous().view(-1)
-
-        b_n_correct = b_pred.eq(b_gold)
-        b_n_correct = b_n_correct.masked_select(b_gold.ne(Constants.PAD)).sum().item()
+            b_n_correct = b_pred.eq(b_gold)
+            b_n_correct = b_n_correct.masked_select(b_gold.ne(Constants.PAD)).sum().item()
 
         return loss, (f_n_correct, b_n_correct)
 
@@ -111,43 +116,50 @@ class DialogueSupervisedTrainer(object):
                                                                        attn_mask=self.is_attn_mask, device=device)
                 
                 ##### ==================== forward ==================== #####
-                f_rst, b_rst = self.model(inputs)
+                f_rst, b_rst = self.model(inputs, mode=self.opt.mode)
                 ##### ==================== backward ==================== #####
-                loss_input = {
-                    'forward': {'pred': f_rst['pred'], 'gold': gold['forward']}, 
-                    'backward': {'pred': b_rst['pred'], 'gold': gold['backward']}
-                }
-                if self.opt.copy:
-                    loss_input['forward']['copy_pred'], loss_input['forward']['copy_gate'] = f_rst['copy_pred'], f_rst['copy_gate']
-                    loss_input['forward']['copy_gold'], loss_input['forward']['copy_switch'] = fcopy[0], fcopy[1]
-                    loss_input['backward']['copy_pred'], loss_input['backward']['copy_gate'] = b_rst['copy_pred'], b_rst['copy_gate']
-                    loss_input['backward']['copy_gold'], loss_input['backward']['copy_switch'] = bcopy[0], bcopy[1]
-                if self.opt.coverage:
-                    loss_input['forward']['coverage_pred'] = f_rst['coverage_pred']
-                    loss_input['backward']['coverage_pred'] = b_rst['coverage_pred']
+                loss_input = {}
+
+                if self.opt.mode in ['initialization', 'forward']:
+                    loss_input['forward'] = {'pred': f_rst['pred'], 'gold': gold['forward']}
+                    if self.opt.copy:
+                        loss_input['forward']['copy_pred'], loss_input['forward']['copy_gate'] = f_rst['copy_pred'], f_rst['copy_gate']
+                        loss_input['forward']['copy_gold'], loss_input['forward']['copy_switch'] = fcopy[0], fcopy[1]
+                    if self.opt.coverage:
+                        loss_input['forward']['coverage_pred'] = f_rst['coverage_pred']
+
+                if self.opt.mode in ['initialization', 'backward']:
+                    loss_input['backward'] = {'pred': b_rst['pred'], 'gold': gold['backward']}
+                    if self.opt.copy:
+                        loss_input['backward']['copy_pred'], loss_input['backward']['copy_gate'] = b_rst['copy_pred'], b_rst['copy_gate']
+                        loss_input['backward']['copy_gold'], loss_input['backward']['copy_switch'] = bcopy[0], bcopy[1]
+                    if self.opt.coverage:
+                        loss_input['backward']['coverage_pred'] = b_rst['coverage_pred']
 
                 loss, n_correct = self.cal_performance(loss_input)
 
-                n_word_f = gold['forward'].ne(Constants.PAD).sum().item()
-                n_word_b = gold['backward'].ne(Constants.PAD).sum().item()
-
                 total_loss += loss.item()
-                n_word_total_f += n_word_f
-                n_word_total_b += n_word_b
-                n_word_correct_f += n_correct[0]
-                n_word_correct_b += n_correct[1]
+
+                if self.opt.mode in ['initialization', 'forward']:
+                    n_word_f = gold['forward'].ne(Constants.PAD).sum().item()
+                    n_word_total_f += n_word_f
+                    n_word_correct_f += n_correct[0]
+                if self.opt.mode in ['initialization', 'backward']:
+                    n_word_b = gold['backward'].ne(Constants.PAD).sum().item()
+                    n_word_total_b += n_word_b
+                    n_word_correct_b += n_correct[1]
             
             loss_per_word = total_loss / (n_word_total_f + n_word_total_b)
-            accuracy_f, accuracy_b = n_word_correct_f / n_word_total_f * 100, n_word_correct_b / n_word_total_b * 100
+            accuracy_f = n_word_correct_f / n_word_total_f * 100 if self.opt.mode in ['initialization', 'forward'] else -1
+            accuracy_b = n_word_correct_b / n_word_total_b * 100 if self.opt.mode in ['initialization', 'backward'] else -1
             bleu = 'unk'
             perplexity = math.exp(min(loss_per_word, 16))
 
-            if (perplexity <= self.opt.translate_ppl or perplexity > self.best_ppl):
-                if self.cntBatch % self.opt.translate_steps == 0 or self.cntBatch > -1: 
-                    bleu = (
-                        self.forward_translator.eval_all(self.model, self.validation_data),
-                        self.backward_translator.eval_all(self.model, self.validation_data)
-                    )
+            if perplexity <= self.opt.translate_ppl:
+                if self.cntBatch % self.opt.translate_steps == 0: 
+                    bleu_f = self.forward_translator.eval_all(self.model, self.validation_data) if self.opt.mode in ['initialization', 'forward'] else -1
+                    bleu_b = self.backward_translator.eval_all(self.model, self.validation_data) if self.opt.mode in ['initialization', 'backward'] else -1
+                    bleu = (bleu_f, bleu_b)
 
         return loss_per_word, (accuracy_f, accuracy_b), bleu
 
@@ -179,21 +191,26 @@ class DialogueSupervisedTrainer(object):
             self.model.zero_grad()
             self.optimizer.zero_grad()
             
-            f_rst, b_rst = self.model(inputs)
+            f_rst, b_rst = self.model(inputs, mode=self.opt.mode)
 
             ##### ==================== backward ==================== #####
-            loss_input = {
-                'forward': {'pred': f_rst['pred'], 'gold': gold['forward']}, 
-                'backward': {'pred': b_rst['pred'], 'gold': gold['backward']}
-            }
-            if self.opt.copy:
-                loss_input['forward']['copy_pred'], loss_input['forward']['copy_gate'] = f_rst['copy_pred'], f_rst['copy_gate']
-                loss_input['forward']['copy_gold'], loss_input['forward']['copy_switch'] = fcopy[0], fcopy[1]
-                loss_input['backward']['copy_pred'], loss_input['backward']['copy_gate'] = b_rst['copy_pred'], b_rst['copy_gate']
-                loss_input['backward']['copy_gold'], loss_input['backward']['copy_switch'] = bcopy[0], bcopy[1]
-            if self.opt.coverage:
-                loss_input['forward']['coverage_pred'] = f_rst['coverage_pred']
-                loss_input['backward']['coverage_pred'] = b_rst['coverage_pred']
+            loss_input = {}
+
+            if self.opt.mode in ['initialization', 'forward']:
+                loss_input['forward'] = {'pred': f_rst['pred'], 'gold': gold['forward']}
+                if self.opt.copy:
+                    loss_input['forward']['copy_pred'], loss_input['forward']['copy_gate'] = f_rst['copy_pred'], f_rst['copy_gate']
+                    loss_input['forward']['copy_gold'], loss_input['forward']['copy_switch'] = fcopy[0], fcopy[1]
+                if self.opt.coverage:
+                    loss_input['forward']['coverage_pred'] = f_rst['coverage_pred']
+
+            if self.opt.mode in ['initialization', 'backward']:
+                loss_input['backward'] = {'pred': b_rst['pred'], 'gold': gold['backward']}
+                if self.opt.copy:
+                    loss_input['backward']['copy_pred'], loss_input['backward']['copy_gate'] = b_rst['copy_pred'], b_rst['copy_gate']
+                    loss_input['backward']['copy_gold'], loss_input['backward']['copy_switch'] = bcopy[0], bcopy[1]
+                if self.opt.coverage:
+                    loss_input['backward']['coverage_pred'] = b_rst['coverage_pred']
 
             loss, n_correct = self.cal_performance(loss_input)
             if len(self.opt.gpus) > 1:
@@ -207,21 +224,22 @@ class DialogueSupervisedTrainer(object):
             self.optimizer.step()
 
             ##### ==================== note for epoch report & step report ==================== #####
-            n_word_f = gold['forward'].ne(Constants.PAD).sum().item()
-            n_word_b = gold['backward'].ne(Constants.PAD).sum().item()
-
             total_loss += loss.item()
             report_total_loss += loss.item()
 
-            n_word_total_f += n_word_f
-            n_word_correct_f += n_correct[0]
-            n_word_total_b += n_word_b
-            n_word_correct_b += n_correct[1]
+            if self.opt.mode in ['initialization', 'forward']:
+                n_word_f = gold['forward'].ne(Constants.PAD).sum().item()
+                n_word_total_f += n_word_f
+                n_word_correct_f += n_correct[0]
+                report_n_word_total_f += n_word_f
+                report_n_word_correct_f += n_correct[0]
             
-            report_n_word_total_f += n_word_f
-            report_n_word_correct_f += n_correct[0]
-            report_n_word_total_b += n_word_b
-            report_n_word_correct_b += n_correct[1]
+            if self.opt.mode in ['initialization', 'backward']:
+                n_word_b = gold['backward'].ne(Constants.PAD).sum().item()
+                n_word_total_b += n_word_b
+                n_word_correct_b += n_correct[1]
+                report_n_word_total_b += n_word_b
+                report_n_word_correct_b += n_correct[1]
             
             ##### ==================== evaluation ==================== #####
             self.cntBatch += 1
@@ -232,8 +250,8 @@ class DialogueSupervisedTrainer(object):
 
                 report_avg_loss = report_total_loss / (report_n_word_total_f + report_n_word_total_b)
                 report_avg_ppl = math.exp(min(report_avg_loss, 16))
-                report_avg_accu_f = report_n_word_correct_f / report_n_word_total_f
-                report_avg_accu_b = report_n_word_correct_b / report_n_word_total_b
+                report_avg_accu_f = report_n_word_correct_f / report_n_word_total_f * 100 if self.opt.mode in ['initialization', 'forward'] else -1
+                report_avg_accu_b = report_n_word_correct_b / report_n_word_total_b * 100 if self.opt.mode in ['initialization', 'backward'] else -1
                 
                 better = False
                 if valid_ppl <= self.best_ppl:
@@ -258,8 +276,8 @@ class DialogueSupervisedTrainer(object):
                 self.model.train()
 
         loss_per_word = total_loss / (n_word_total_f + n_word_total_b)
-        accuracy_f = n_word_correct_f / n_word_total_f * 100
-        accuracy_b = n_word_correct_b / n_word_total_b * 100
+        accuracy_f = n_word_correct_f / n_word_total_f * 100 if self.opt.mode in ['initialization', 'forward'] else -1
+        accuracy_b = n_word_correct_b / n_word_total_b * 100 if self.opt.mode in ['initialization', 'backward'] else -1
 
         return math.exp(min(loss_per_word, 16)), (accuracy_f, accuracy_b)
 

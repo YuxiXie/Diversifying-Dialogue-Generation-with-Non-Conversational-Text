@@ -4,9 +4,9 @@ import torch.nn as nn
 import argparse
 from tqdm import tqdm
 
-from onqg.utils.translate.Translator import Translator
-from onqg.dataset.Dataset import Dataset
-from onqg.utils.model_builder import build_model
+from onqg.utils.translate.DialogueTranslator import DialogueTranslator
+from onqg.dataset.Dataset import DialogueDataset
+from onqg.utils.model_builder import build_dialogue_model
 
 
 def dump(data, filename, bleu):
@@ -25,48 +25,33 @@ def main(opt):
     device = torch.device('cuda' if opt.cuda else 'cpu')
 
     checkpoint = torch.load(opt.model)
-    model_opt = checkpoint['options']   # torch.load('cased_opt.pt')
+    model_opt = checkpoint['options']
     model_opt.gpus = opt.gpus
     model_opt.beam_size, model_opt.batch_size = opt.beam_size, opt.batch_size
-    # model_opt.checkpoint_mode = 'all'
-    #model_opt.slf_attn_type = 'gated'
-    #model_opt.max_token_tgt_len = 50
-    #model_opt.proj_share_weight = False
+    model_opt.mode = opt.mode
 
     ### Prepare Data ###
     data = torch.load(opt.data)
 
     src_vocab, tgt_vocab = data['dict']['src'], data['dict']['tgt']
-    # validData = Dataset(data['train'], model_opt.batch_size, copy=model_opt.copy, 
-    #                     answer=model_opt.answer == 'enc', ans_feature=model_opt.ans_feature, 
-    #                     feature=model_opt.feature, opt_cuda=model_opt.gpus)
-    validData = Dataset(data['valid'], model_opt.batch_size, copy=model_opt.copy, 
-                        answer=model_opt.answer == 'enc', ans_feature=model_opt.ans_feature, 
-                        feature=model_opt.feature, opt_cuda=model_opt.gpus)
+    validData = DialogueDataset(data['valid'], model_opt.batch_size, 
+                                copy=model_opt.copy, opt_cuda=model_opt.gpus)
     
     ### Prepare Model ###
-    model, _ = build_model(model_opt, device)
-    model.load_state_dict(checkpoint['model state dict'])
+    model, _ = build_dialogue_model(opt, device, checkpoint=checkpoint)
     model.eval()
 
-    translator = Translator(model_opt, tgt_vocab, data['valid']['tokens'], src_vocab)
+    if opt.mode in ['initialization', 'forward']:
+        forward_translator = DialogueTranslator(opt, tgt_vocab, data['valid']['tokens'], src_vocab)
+        bleu_f, outputs_f = forward_translator.eval_all(model, validData, output_sent=True)
+        print('\n * forward bleu-4', bleu_f, '\n')
+        dump(outputs_f, opt.output, bleu_f)
 
-    bleu, outputs = translator.eval_all(model, validData, output_sent=True)
-
-    print('\nbleu-4', bleu, '\n')
-
-    # dump(outputs, opt.output, bleu)
-
-    # import ipdb; ipdb.set_trace()
-
-    golds, preds, paras = outputs[0], outputs[1], outputs[2]
-    golds = [[[w.lower() for w in g[0]]] for g in golds]
-    preds = [[w.lower() for w in p] for p in preds]
-    from nltk.translate import bleu_score
-    bleu = bleu_score.corpus_bleu(golds, preds)
-    print('\nbleu-4', bleu, '\n')  
-
-    dump(outputs, opt.output, bleu) 
+    if opt.mode in ['initialization', 'backward']:
+        backward_translator = DialogueTranslator(opt, src_vocab, data['valid']['tokens'], tgt_vocab, reverse=True)
+        bleu_b, outputs_b = backward_translator.eval_all(model, validData, output_sent=True)
+        print('\n * backward bleu-4', bleu_b, '\n')
+        dump(outputs_b, opt.output, bleu_b)
 
 
 if __name__ == '__main__':

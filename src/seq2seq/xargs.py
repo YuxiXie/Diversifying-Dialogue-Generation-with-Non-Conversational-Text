@@ -1,4 +1,5 @@
 import argparse
+from random import choice
 
 
 def add_data_options(parser):
@@ -113,6 +114,7 @@ def add_model_options(parser):
 
 
 def add_train_options(parser):
+     parser.add_argument('-mode', type=str, choices=['initialization', 'forward', 'backward'], default='initialization')
      # log
      parser.add_argument('-log_home', required=True, help="""log home""")
 

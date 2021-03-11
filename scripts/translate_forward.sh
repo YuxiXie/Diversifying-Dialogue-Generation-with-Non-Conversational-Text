@@ -14,9 +14,9 @@ mkdir -p ${DATAHOME}/predictions
 cd ${EXEHOME}
 
 python translate.py \
-       -mode backward \
+       -mode forward \
        -data ${DATAHOME}/eli5_uncased_data_128.pt \
        -model ${MODELHOME}/initialization.chkpt \
-       -output ${DATAHOME}/predictions/eli5-initialization-backward.txt \
+       -output ${DATAHOME}/predictions/eli5-initialization-forward-sample.txt \
        -gpus 0 \
-       -batch_size 16
+       -batch_size 32

@@ -9,13 +9,15 @@ from onqg.dataset.Dataset import DialogueDataset
 from onqg.utils.model_builder import build_dialogue_model
 
 
-def dump(data, filename, mode):
+def dump(data, filename, mode, double=False):
     filename = filename.rstrip('txt').rstrip('.') + '_{mode}_.txt'.format(mode=mode)
-    preds, paras = data[1], data[2]
+    golds, preds, paras = data[0], data[1], data[2]
     with open(filename, 'w', encoding='utf-8') as f:
-        for p, pa in zip(preds, paras):
+        for g, p, pa in zip(golds, preds, paras):
             pa = [w for w in pa if w not in ['[PAD]', '[CLS]']]
             f.write('<ctxt>\t' + ' '.join(pa) + '\n')
+            if double:
+                f.write('<gold>\t' + ' '.join(g) + '\n')
             f.write('<pred>\t' + ' '.join(p) + '\n')
             f.write('===========================\n')
 
@@ -37,7 +39,7 @@ def main(opt):
     data = torch.load(opt.data)
 
     src_vocab, tgt_vocab = data['dict']['src'], data['dict']['tgt']
-    validData = DialogueDataset(data['valid'], model_opt.batch_size, 
+    validData = DialogueDataset(data['train'], model_opt.batch_size, 
                                 copy=model_opt.copy, opt_cuda=model_opt.gpus)
     
     ### Prepare Model ###
@@ -48,13 +50,13 @@ def main(opt):
         forward_translator = DialogueTranslator(model_opt, tgt_vocab, data['valid']['tokens'], src_vocab)
         bleu_f, outputs_f = forward_translator.eval_all(model, validData, output_sent=True)
         print('\n * forward bleu-4', bleu_f, '\n')
-        dump(outputs_f, opt.output, opt.mode)
+        dump(outputs_f, opt.output, 'forward', double=opt.mode == 'initialization')
 
     if model_opt.mode in ['initialization', 'backward']:
         backward_translator = DialogueTranslator(model_opt, src_vocab, data['valid']['tokens'], tgt_vocab, reverse=True)
         bleu_b, outputs_b = backward_translator.eval_all(model, validData, output_sent=True)
         print('\n * backward bleu-4', bleu_b, '\n')
-        dump(outputs_b, opt.output, opt.mode)
+        dump(outputs_b, opt.output, 'backward', double=opt.mode == 'initialization')
 
 
 if __name__ == '__main__':

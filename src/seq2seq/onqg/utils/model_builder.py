@@ -158,7 +158,7 @@ def build_dialogue_model(opt, device, separate=-1, checkpoint=None):
     
     if checkpoint is not None:
         try:
-            model.load_state_dict(checkpoint['model state dict'])
+            model.load_state_dict(checkpoint['model'])
         except:
             model.load_state_dict(checkpoint)
 

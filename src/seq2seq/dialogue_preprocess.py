@@ -41,9 +41,9 @@ def convert_word_to_idx(data, vocabularies, opt):
         if not opt.bert_tokenizer or not opt.share_vocab:
             tgt = lower_sent(tgt)
         if opt.bert_tokenizer:
-            src = vocabularies['src'].tokenizer.tokenize(' '.join(src))
+            src = vocabularies['src'].tokenizer.tokenize(src)
             if opt.share_vocab:
-                tgt = [Constants.CLS_WORD] + vocabularies['tgt'].tokenizer.tokenize(' '.join(tgt)) + [Constants.SEP_WORD]
+                tgt = [Constants.CLS_WORD] + vocabularies['tgt'].tokenizer.tokenize(tgt) + [Constants.SEP_WORD]
             else:
                 tgt = [Constants.BOS_WORD] + tgt + [Constants.EOS_WORD]
         else:
@@ -203,7 +203,7 @@ def main(opt):
         }
     
     torch.save(data, opt.save_data)
-    # import ipdb; ipdb.set_trace()
+    import ipdb; ipdb.set_trace()
 
 
 if __name__ == '__main__':

@@ -20,7 +20,7 @@ python train.py \
        -gpus 0 \
        -data ${DATAHOME}/basic_uncased_data_128.pt \
        -epoch 50 -batch_size 64 -eval_batch_size 32 \
-       -max_token_src_len 128 -max_token_tgt_len 128 \
+       -max_token_src_len 128 -max_token_tgt_len 64 \
        -copy -coverage -coverage_weight 0.4 \
        -d_word_vec 300 \
        -d_enc_model 512 -n_enc_layer 1 -brnn -enc_rnn gru \

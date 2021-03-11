@@ -82,11 +82,10 @@ class DialogueSupervisedTrainer(object):
     def save_model(self, better, bleu):
         model_state_dict = self.model.module.state_dict() if len(self.opt.gpus) > 1 else self.model.state_dict()
         model_state_dict = collections.OrderedDict([(x,y.cpu()) for x,y in model_state_dict.items()])
-        checkpoint = model_state_dict
-        # {
-        #     'model': model_state_dict,
-        #     'settings': self.opt,
-        #     'step': self.cntBatch}
+        checkpoint = {
+            'model': model_state_dict,
+            'settings': self.opt,
+            'step': self.cntBatch}
 
         if self.opt.save_mode == 'all':
             model_name = self.opt.save_model + '_ppl_{ppl:2.5f}.chkpt'.format(ppl=self.best_ppl)

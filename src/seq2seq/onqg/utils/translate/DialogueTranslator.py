@@ -226,7 +226,7 @@ class DialogueTranslator(object):
     def eval_batch(self, model, inputs, batchIdx=None):
         
         def get_preds(seq, is_copy_seq=None, copy_seq=None, src_words=None, attn=None):
-            pred = [idx for idx in seq if idx not in [Constants.PAD, Constants.EOS, 102]]   # magic number
+            pred = [idx for idx in seq if idx not in [Constants.PAD, Constants.EOS, Constants.SEP]]   # magic number
             for i, _ in enumerate(pred):
                 if self.opt.copy and is_copy_seq[i].item():
                     try:
@@ -274,7 +274,7 @@ class DialogueTranslator(object):
                 preds.append(get_preds(seq))
             paras.append(src_tokens(src_words))
             golds.append([src_tokens(raw_golds[i][0])])
-
+            
         return {'gold':golds, 'pred':preds, 'para':paras}
     
     def eval_all(self, model, validData, output_sent=False):
@@ -285,7 +285,7 @@ class DialogueTranslator(object):
         valid_length = len(validData)
         eval_index_list = range(valid_length)
 
-        # eval_index_list = random.sample(range(valid_length), 1) 
+        eval_index_list = random.sample(range(valid_length), 5) 
         # import ipdb; ipdb.set_trace()
         for idx in tqdm(eval_index_list, mininterval=2, desc='   - (Translating)   ', leave=False):
             ### ========== Prepare data ========== ###

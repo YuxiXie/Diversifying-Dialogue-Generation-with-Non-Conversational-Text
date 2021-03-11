@@ -68,7 +68,7 @@ def main(opt, logger):
     logger.info(' * vocabulary size. source = %d; target = %d' % (opt.src_vocab_size, opt.tgt_vocab_size))
     logger.info(' * number of training batches. %d' % len(trainData))
     logger.info(' * maximum batch size. %d' % opt.batch_size)
-
+    
     ##### =================== Prepare Model =================== #####
     separate = -1
     device = torch.device('cuda:' + str(opt.gpus[0]) if len(opt.gpus) else 'cpu')
@@ -91,6 +91,8 @@ def main(opt, logger):
     forward_translator = DialogueTranslator(opt, vocabularies['tgt'], data['valid']['tokens'], vocabularies['src'])
     backward_translator = DialogueTranslator(opt, vocabularies['src'], data['valid']['tokens'], vocabularies['tgt'], reverse=True)
     
+    # torch.save(opt, opt.save_model + '-opt.pt')
+    # import ipdb; ipdb.set_trace()
     ##### ==================== Training ==================== #####
     trainer = DialogueSupervisedTrainer(model, loss, optimizer, 
                                         forward_translator, backward_translator,

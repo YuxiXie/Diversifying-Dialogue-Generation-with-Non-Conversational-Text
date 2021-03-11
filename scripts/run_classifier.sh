@@ -2,6 +2,8 @@
 
 set -x
 
+PROJECTHOME=/home/yuxi/Projects/DiversifyDialogue
+
 DATAHOME=${PROJECTHOME}/data/DailyDialogue/processed-for-classification
 EXEHOME=${PROJECTHOME}/codes/Diversifying-Dialogue-Generation-with-Non-Conversational-Text/src/topic-classifier
 MODELHOME=${PROJECTHOME}/models/classifier

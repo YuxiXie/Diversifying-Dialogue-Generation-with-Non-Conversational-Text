@@ -330,6 +330,7 @@ def train(args, train_dataset, model: PreTrainedModel, tokenizer: PreTrainedToke
             
             outputs = model(inputs, labels=labels)
             logits = outputs[1]
+            
             loss_fct = nn.CrossEntropyLoss(reduce=False)
             loss_raw = loss_fct(logits, labels)
 
@@ -337,6 +338,7 @@ def train(args, train_dataset, model: PreTrainedModel, tokenizer: PreTrainedToke
             gt_pred_prb = torch.gather(F.softmax(logits, dim=-1), dim=-1, index=labels.unsqueeze(-1)).squeeze(1)
             # Focal Loss
             alpha_matrix = torch.Tensor([4067, 2632, 1583])     # magic number - label distribution
+            
             alpha_matrix = torch.gather((alpha_matrix / alpha_matrix.max()).to(logits.device), dim=0, index=labels)
             
             loss = (loss_raw * torch.pow((1 - gt_pred_prb), 2) * alpha_matrix).mean()

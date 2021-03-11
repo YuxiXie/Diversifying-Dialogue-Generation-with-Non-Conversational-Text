@@ -17,7 +17,7 @@ def dump(data, filename, mode, double=False):
             pa = [w for w in pa if w not in ['[PAD]', '[CLS]']]
             f.write('<ctxt>\t' + ' '.join(pa) + '\n')
             if double:
-                f.write('<gold>\t' + ' '.join(g) + '\n')
+                f.write('<gold>\t' + ' '.join(g[0]) + '\n')
             f.write('<pred>\t' + ' '.join(p) + '\n')
             f.write('===========================\n')
 
@@ -33,13 +33,13 @@ def main(opt):
     model_opt.gpus = opt.gpus
     model_opt.beam_size, model_opt.batch_size = opt.beam_size, opt.batch_size
     model_opt.mode = opt.mode
-    # model_opt.max_token_tgt_len = 32    # magic number
+    model_opt.max_token_tgt_len = 32    # magic number
     
     ### Prepare Data ###
     data = torch.load(opt.data)
 
     src_vocab, tgt_vocab = data['dict']['src'], data['dict']['tgt']
-    validData = DialogueDataset(data['train'], model_opt.batch_size, 
+    validData = DialogueDataset(data['valid'], model_opt.batch_size, 
                                 copy=model_opt.copy, opt_cuda=model_opt.gpus)
     
     ### Prepare Model ###

@@ -17,6 +17,6 @@ python translate.py \
        -mode backward \
        -data ${DATAHOME}/eli5_uncased_data_128.pt \
        -model ${MODELHOME}/initialization.chkpt \
-       -output ${DATAHOME}/predictions/eli5-initialization-backward.txt \
+       -output ${DATAHOME}/predictions/eli5-initialization-backward-sample.txt \
        -gpus 0 \
-       -batch_size 16
+       -batch_size 32
